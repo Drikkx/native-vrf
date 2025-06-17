@@ -106,7 +106,8 @@ contract NativeVRF {
             rewards[_requestIds[i]] = 0;
         }
 
-        payable(msg.sender).transfer(totalReward);
+        (bool success, ) = payable(msg.sender).call{value: totalReward}("");
+        require(success, "Transfer failed");
 
         nBlockFulfillments[block.number] += _requestIds.length;
         latestFulfillId += _requestIds.length;
